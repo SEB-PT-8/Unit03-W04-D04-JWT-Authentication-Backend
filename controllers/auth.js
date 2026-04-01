@@ -4,12 +4,23 @@ const User = require('../model/User')
 
 // POST /auth/sign-up
 router.post('/sign-up', async (req,res)=>{
-    // 1. verify that the username doesn't already exist in the Database
+
+    try{
+            // 1. verify that the username doesn't already exist in the Database
     const foundUser = await User.findOne({username:req.body.username})
 
     if(foundUser){
         return res.status(409).json({err:'Username taken please sign in or Sign up with different username'})
     }
+
+    // 1.5: validation for password length and characters
+   /*  const regexString = '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+
+    if (!req.body.password.match(new RegExp(regexString))) {
+        return res.status(400).json({
+            err: 'Password must be minimum 8 characters, include at least one letter and one number'
+        })
+    } */
 
     // 2. save the user in the Database with the encrypted password
     const createdUser = await User.create({
@@ -21,9 +32,30 @@ router.post('/sign-up', async (req,res)=>{
     delete userObject.hashedPassword
     // 3. send back the created user
     res.status(201).json({user:userObject})
+
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({err:err.message})
+    }
 })
 
 // POST /auth/login
+
+// 1. user sends POST request with username and password to login
+// 2. get the user from db and check if they exist the DB
+// 3. compare the password they give me vs the password in the DB
+// 4. Sign a new JWT token send it back as a response
+
+router.post('/sign-in',async(req,res)=>{
+    try{
+
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({err:err.message})
+    }
+})
 
 
 
