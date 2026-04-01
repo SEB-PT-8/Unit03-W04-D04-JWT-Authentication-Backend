@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const User = require('../model/User')
+const jwt = require('jsonwebtoken')
 
 // POST /auth/sign-up
 router.post('/sign-up', async (req,res)=>{
@@ -14,7 +15,7 @@ router.post('/sign-up', async (req,res)=>{
     }
 
     // 1.5: validation for password length and characters
-   /*  const regexString = '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+/*     const regexString = '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
 
     if (!req.body.password.match(new RegExp(regexString))) {
         return res.status(400).json({
@@ -49,7 +50,32 @@ router.post('/sign-up', async (req,res)=>{
 
 router.post('/sign-in',async(req,res)=>{
     try{
+        const { username, password} = req.body // destructure the username and password
 
+        // 2. get the user from db and check if they exist the DB
+
+        const foundUser = await User.findOne({username:username})
+
+        if(!foundUser){
+            return res.status(401).json({err:'username not found, please signup'})
+        }
+
+        // 3. compare the password they give me vs the password in the DB
+
+        const doesPasswordMatch = bcrypt.compareSync(password, foundUser.hashedPassword)
+
+        if(!doesPasswordMatch){
+            return res.status(401).json({err:'username or password incorrect'})
+
+        }
+
+        const userObject = foundUser.toObject()
+        delete userObject.hashedPassword
+
+        // 4. Sign a new JWT token send it back as a response
+        const token = jwt.sign({userObject},process.env.JWT_SECRET,{expiresIn:'24h'})
+
+        res.json({token})
     }
     catch(err){
         console.log(err)
