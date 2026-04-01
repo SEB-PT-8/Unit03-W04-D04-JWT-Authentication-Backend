@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('morgan');
 const authRouter = require('./controllers/auth')
+const verifyToken = require('./middleware/verifyToken')
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -19,6 +20,11 @@ app.use(logger('dev'));
 
 // Routes go here
 app.use('/auth',authRouter)
+
+app.get('/omar',verifyToken,(req,res)=>{
+  console.log(req.user)
+  res.json("SUCCESS")
+})
 
 app.listen(3000, () => {
   console.log('The express app is ready!');

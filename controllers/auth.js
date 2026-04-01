@@ -69,11 +69,11 @@ router.post('/sign-in',async(req,res)=>{
 
         }
 
-        const userObject = foundUser.toObject()
-        delete userObject.hashedPassword
+        const payload = foundUser.toObject()
+        delete payload.hashedPassword
 
         // 4. Sign a new JWT token send it back as a response
-        const token = jwt.sign({userObject},process.env.JWT_SECRET,{expiresIn:'24h'})
+        const token = jwt.sign({payload},process.env.JWT_SECRET,{expiresIn:'24h'})
 
         res.json({token})
     }
