@@ -15,6 +15,7 @@ router.post('/sign-up', async (req,res)=>{
     }
 
     // 1.5: validation for password length and characters
+    // Uncomment this if you want to enforce password with 1 letter, 1 number, 8 characters minimum
 /*     const regexString = '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
 
     if (!req.body.password.match(new RegExp(regexString))) {
