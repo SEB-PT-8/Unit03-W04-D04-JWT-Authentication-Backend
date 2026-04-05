@@ -3,6 +3,10 @@ const bcrypt = require('bcrypt')
 const User = require('../model/User')
 const jwt = require('jsonwebtoken')
 
+
+// 1. check if the user is already in the Database
+// 2. if they are not then create a new user in the database with the encrypted password
+// 3. send back the user object as response
 // POST /auth/sign-up
 router.post('/sign-up', async (req,res)=>{
 

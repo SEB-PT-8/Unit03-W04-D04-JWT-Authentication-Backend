@@ -21,7 +21,7 @@ app.use(logger('dev'));
 // Routes go here
 app.use('/auth',authRouter)
 
-app.get('/omar',verifyToken,(req,res)=>{
+app.get('/pets',verifyToken,(req,res)=>{
   console.log(req.user)
   res.json("SUCCESS")
 })
